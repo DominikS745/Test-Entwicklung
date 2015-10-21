@@ -27,7 +27,10 @@ public class Startseite extends Activity implements SeekBar.OnSeekBarChangeListe
 
     private  Location locationA = new Location("point A");
     private  Location locationB = new Location("point B");
-    private TextView textHome, textPosition, textProgress, textEntfernung;
+    private TextView textHome, textProgress, textPosition;
+    private TextView entfernung;
+    private TextView position;
+    private TextView hinweis;
     private  SeekBar bar;
     private MediaPlayer mp = null;
     private String alarm = "Alarm!";
@@ -49,6 +52,9 @@ public class Startseite extends Activity implements SeekBar.OnSeekBarChangeListe
         textProgress = (TextView) findViewById(R.id.textProgress);
         textHome = (TextView) findViewById(R.id.textHome);
         textPosition = (TextView) findViewById(R.id.textPosition);
+        hinweis = (TextView) findViewById(R.id.textHinweis);
+        position = (TextView) findViewById(R.id.textPosition);
+        entfernung = (TextView) findViewById(R.id.textEntfernung);
 
        final Button buttonMusik = (Button) findViewById(R.id.buttonMusik);
         buttonMusik.setOnClickListener(new View.OnClickListener() {
@@ -78,20 +84,13 @@ public class Startseite extends Activity implements SeekBar.OnSeekBarChangeListe
 
             //Interruped wird genutzt hier ! Nichr das Polling!!
             public void onLocationChanged(Location location) {
-                test();
                 System.out.println("location changed to " + location);
-
-                TextView position = (TextView) findViewById(R.id.textPosition);
-
-                TextView entfernung = (TextView) findViewById(R.id.textEntfernung);
-
-                TextView hinweis = (TextView) findViewById(R.id.textHinweis);
 
                 locationA.setLatitude(location.getLatitude());
                 locationA.setLongitude(location.getLongitude());
 
                 position.setText("Aktuelle Position: " + "long: " + locationA.getLongitude() + " Lat: " + locationA.getLatitude());
-                entfernung.setText("Deine Entfernung:" + locationA.distanceTo(locationB));
+                entfernung.setText("Die Entfernung betraegt:" + locationA.distanceTo(locationB));
                 System.out.println("Entfernung: " + locationA.distanceTo(locationB));
 
 
@@ -115,21 +114,15 @@ public class Startseite extends Activity implements SeekBar.OnSeekBarChangeListe
 
     }
 
-    public void test() {
+    public void setHome(View view){
         try {
             locationManager.requestLocationUpdates(locationManager.GPS_PROVIDER, 0, 0, listener);
-            System.out.println(locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER));
+            locationB = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
         }
-        catch(SecurityException e) {
+        catch(Exception e){
             e.printStackTrace();
         }
-    }
-
-    public void setHome(View view){
-
-
-        locationB = locationA;
-        textHome.setText("Dein aktuelles zu Hause: " + "long: " + locationA.getLongitude() + " Lat: " + locationA.getLatitude());
+        textHome.setText("Dein aktuelles zu Hause: " + "long: " + locationB.getLongitude() + " Lat: " + locationB.getLatitude());
     }
 
 
